@@ -63,19 +63,15 @@ useEffect(function() {
     setIsLoading(true);
 
     let query = supabase.from("facts").select("*");
-    if (currentCategory !== "all")
-    query = query.eq("category", currentCategory)
+    if (currentCategory !== "All")
+    query = query.eq("category", currentCategory);
     
     const { data: facts, error } = await query
-    // .from('facts')
-    // .select('*')
-    // .eq('category', 'technology')
-    .order('text', { ascending: true})
+    .order('text', { ascending: false})
     .limit('1000');
     
     if(!error) setFacts(facts);
     else alert('There was a problem getting data');
-    setFacts(facts);
     setIsLoading(false);
   }
   getFacts();
@@ -91,7 +87,7 @@ return (
     {showForm ? <NewFactForm setFacts={setFacts} setShowForm={setShowForm}/> : null}
       <main className="main">
       <CategoryFilter setCurrentCategory={setCurrentCategory}/>
-        {isLoading ? <Loader /> : <FactsList facts={facts}/> }
+        {isLoading ? <Loader /> : <FactList facts={facts}/> }
       
       </main>
   </>
@@ -245,12 +241,13 @@ function CategoryFilter({setCurrentCategory}) {
   );
 }
 
-function FactsList({facts}) {
+function FactList({facts}) {
+
+  
 
   if(facts.length === 0) 
     return ( 
               <p className="message"> No facts for this category yet! Create the first one  </p>
-  
             );
           
     return ( 
